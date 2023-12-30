@@ -41,6 +41,7 @@ async function run() {
       const result = await birdsCollection.insertOne(item);
       res.send(result);
     });
+
     app.post('/birds/:birdId', async (req, res) => {
       const birdId = req.params.birdId;
     
@@ -62,6 +63,25 @@ async function run() {
     
       res.json({ loveCount: updatedBird.loveStatus }); // Send the love count in the response
     });
+
+
+     // Delete a bird by ID
+     app.delete('/birds/:birdId', async (req, res) => {
+      const birdId = req.params.birdId;
+
+      try {
+        const result = await birdsCollection.deleteOne({ _id: new ObjectId(birdId) });
+        if (result.deletedCount === 1) {
+          res.json({ success: true, message: 'Bird deleted successfully.' });
+        } else {
+          res.status(404).json({ success: false, message: 'Bird not found.' });
+        }
+      } catch (error) {
+        console.error('Error deleting bird:', error);
+        res.status(500).json({ success: false, message: 'Internal server error.' });
+      }
+    });
+
     
     
 
