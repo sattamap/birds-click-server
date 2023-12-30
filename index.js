@@ -36,6 +36,14 @@ async function run() {
       res.json(result);
     });
 
+
+    app.get('/birds/:id', async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) }
+      const result = await birdsCollection.findOne(query);
+      res.send(result);
+    })
+
     app.post('/birds', async (req, res) => {
       const item = req.body;
       const result = await birdsCollection.insertOne(item);
@@ -63,6 +71,28 @@ async function run() {
     
       res.json({ loveCount: updatedBird.loveStatus }); // Send the love count in the response
     });
+
+
+
+    app.patch('/birds/:id', async (req, res) => {
+      const item = req.body;
+      const id = req.params.id;
+      const filter = { _id: new ObjectId(id) }
+      const updatedDoc = {
+        $set: {
+          birdNameENG: item.birdNameENG,
+          birdNameBD: item.birdNameBD,
+          location: item.location,
+          date: item.date,
+          description: item.description,
+          camera: item.camera,
+          image: item.image,
+        }
+      }
+
+      const result = await birdsCollection.updateOne(filter, updatedDoc)
+      res.send(result);
+    })
 
 
      // Delete a bird by ID
