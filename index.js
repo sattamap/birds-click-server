@@ -44,6 +44,11 @@ async function run() {
       res.send(result);
     })
 
+    app.get('/birdsCount', async (req, res) => {
+      const count = await birdsCollection.estimatedDocumentCount();
+      res.send({ count });
+    })
+
     app.post('/birds', async (req, res) => {
       const item = req.body;
       const result = await birdsCollection.insertOne(item);
